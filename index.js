@@ -23,7 +23,7 @@ function removeItemFromArray(value, prop, searchArray){
 }
 
 function disableButton(movieId){
-    $(`#searchList button[value=${movieId}]`).attr({disabled: true});
+    $(`#tableBody button[value=${movieId}]`).attr({disabled: true});
 }
 
 function removeNomination(movieId){
@@ -33,38 +33,37 @@ function removeNomination(movieId){
     //update UI
 
     //remove from Nomination List
-    $(`#noimtationsList`).empty();
+    $(`#tableBodyNomination`).empty();
     $.each(currentNominations, function(i, movie) {
         createNominatedListItem(movie.imdbID);
     });
     //enable button in Search List
-    $(`#searchList button[value=${movieId}]`).attr({disabled: false});
+    $(`#tableBody button[value=${movieId}]`).attr({disabled: false});
 }
 
 function createNominatedListItem(movieId){
     let movie = searchArray(movieId, 'imdbID', currentNominations);
+    //might have to add class remove to button to idenfity 
     let removeButton = $('<button>').attr({ type: 'button', name:`btn${currentNominations.length + 1}`, value:`${movieId}`, disabled:false}).append('Remove');
 
     removeButton.click(function(){
         let movieId = $(this).val();
         removeNomination(movieId);
     });
-    let poster = $('<img>')
-    .attr('src', movie.Poster)
-    .height('90px')
-    .width('60px');
+    let tr = $('<tr>');
 
-    $('<li>').append(poster)
-    .append(movie.Title)
-    .append(`, ${movie.Year}`)
-    .append(removeButton)
-    .appendTo('#noimtationsList');
+    let img = `<td> <img src=${movie.Poster} height ='90px' width = '60px' /> </td>`
+
+    tr.append(img);
+    tr.append($('<td>').append(movie.Title));
+    tr.append($('<td>').append(movie.Year));
+    tr.append($('<td>').append(removeButton));
+    tr.appendTo('#tableBodyNomination');
+
 
 }
 
 function addNomination(movieId){
-    //cant double nominate
-    //only add if nomination is new
     if(searchArray(movieId, 'imdbID', currentNominations)){
         return ;
     }
@@ -72,45 +71,46 @@ function addNomination(movieId){
         alert("You have five nominations in your list already!");
         return ;
     }
+
     currentNominations.push(searchArray(movieId, 'imdbID', currentSearch));
     createNominatedListItem(movieId);
-    //disable button in search list
     disableButton(movieId);
 }
 
 function createListItems(){
-    //make sure nominated buttons show up greyed and unclickable
-    //use disabled: true to grey button
-    $('#errorMessage').empty();
+    
+    $('#message').empty();
+
     $.each(currentSearch, function(i, movie) {
         let btnIsDisabled = searchArray(movie.imdbID, 'imdbID', currentNominations) === false ? false : true;
         let nominateButton = $('<button>').attr({ type: 'button', name:`btn${i}`, value:`${movie.imdbID}`, disabled:btnIsDisabled}).append('Nominate');
-        let poster = $('<img>')
-                    .attr('src', movie.Poster)
-                    .height('90px')
-                    .width('60px');
-                    
+        let img = `<td> <img src=${movie.Poster} height ='90px' width = '60px' /> </td>`;
 
         nominateButton.click(function(){
             let movieId = $(this).val();
             addNomination(movieId);
         });
 
-        $('<li>').append(poster)
-        .append(movie.Title)
-        .append(`, ${movie.Year}`)
-        .append(nominateButton)
-        .appendTo('#searchList');
+        let tr = $('<tr>');
+        tr.append(img);
+        tr.append($('<td>').append(movie.Title));
+        tr.append($('<td>').append(movie.Year));
+        tr.append($('<td>').append(nominateButton));
+        tr.appendTo('#tableBody');
+        
     });
+
     //check if search is empty
     if(currentSearch.length === 0){
-        $('#errorMessage').append('No results found');
+        $('#message').append('No results found');
+    } else{
+        $('#message').append('Search Results: ')
     }
 }
 
-function clearSearchResults(){
+function clearResults(id){
     currentSearch = [];
-    $('#searchList').empty();
+    $(`#${id}`).empty();
 }
 
 function getSearchResults(query){
@@ -127,7 +127,7 @@ $(document).ready(function(){
     $('#searchForm').submit(function(e){
         e.preventDefault();
         //clear old search reults
-        clearSearchResults();
+        clearResults('tableBody');
         var searchQuery = $('#searchQuery').val();
 
         //replace spaces with + tomatch API format
@@ -136,15 +136,4 @@ $(document).ready(function(){
         getSearchResults(cleanedQuery);
     });
 });
-
-//this fucntion will trigger when the user seraches for a movie title or ID
-// function search(){
-//     let searchQuery = document.getElementById("searchQuery").value;
-//     console.log(searchQuery);
-// }
-
-//this function will make the call to the OMDb API and return the JSON given by the API 
-// function getmovieJson(){
-//     //use Jquery getJson fucntion
-// }
 
