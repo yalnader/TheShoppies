@@ -9,13 +9,13 @@ var currentSearch = [];
 var currentNominations = [];
 
 function searchArray(value, prop, searchArray){
-    console.log(searchArray , "   Search Array" );
     for(let i = 0; i < searchArray.length; i++){
 
         if(searchArray[i][prop] === value){
             return searchArray[i];
         }
     }
+    return false;
 }
 
 function disableButton(movieId){
@@ -35,15 +35,15 @@ function addNomination(movieId){
 function createListItems(data){
     //make sure nominated buttons show up greyed and unclickable
     //use disabled: true to grey button
-    $.each(data.Search, function(i, movie) {
-        let btnIsDisabled = searchArray(movie.movieId, 'imdbID', currentNominations) ? true : false;
-        console.log(searchArray(movie.movieId, 'imdbID', currentNominations));
+    $.each(currentSearch, function(i, movie) {
+        let btnIsDisabled = searchArray(movie.imdbID, 'imdbID', currentNominations) === false ? false : true;
         let nominateButton = $('<button>').attr({ type: 'button', name:`btn${i}`, value:`${movie.imdbID}`, disabled:btnIsDisabled}).append('Nominate');
+        
         nominateButton.click(function(){
             let movieId = $(this).val();
-            // console.log(currentSearch);
             addNomination(movieId);
         });
+
         $('<li>').append(movie.Title)
         .append(nominateButton)
         .appendTo('#searchList');
@@ -51,7 +51,7 @@ function createListItems(data){
 }
 
 function clearSearchResults(){
-    currentSearch = {};
+    currentSearch = [];
     $('#searchList').empty();
 }
 
