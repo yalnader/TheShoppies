@@ -18,36 +18,94 @@ function searchArray(value, prop, searchArray){
     return false;
 }
 
+function removeItemFromArray(value, prop, searchArray){
+    return searchArray.filter(movie => movie[prop] !== value);
+}
+
 function disableButton(movieId){
-    $(`button[value=${movieId}]`).attr({disabled: true});
+    $(`#searchList button[value=${movieId}]`).attr({disabled: true});
+}
+
+function removeNomination(movieId){
+    currentNominations = removeItemFromArray(movieId, 'imdbID', currentNominations);
+    console.log(currentNominations);
+
+    //update UI
+
+    //remove from Nomination List
+    $(`#noimtationsList`).empty();
+    $.each(currentNominations, function(i, movie) {
+        createNominatedListItem(movie.imdbID);
+    });
+    //enable button in Search List
+    $(`#searchList button[value=${movieId}]`).attr({disabled: false});
+}
+
+function createNominatedListItem(movieId){
+    let movie = searchArray(movieId, 'imdbID', currentNominations);
+    let removeButton = $('<button>').attr({ type: 'button', name:`btn${currentNominations.length + 1}`, value:`${movieId}`, disabled:false}).append('Remove');
+
+    removeButton.click(function(){
+        let movieId = $(this).val();
+        removeNomination(movieId);
+    });
+    let poster = $('<img>')
+    .attr('src', movie.Poster)
+    .height('90px')
+    .width('60px');
+
+    $('<li>').append(poster)
+    .append(movie.Title)
+    .append(`, ${movie.Year}`)
+    .append(removeButton)
+    .appendTo('#noimtationsList');
+
 }
 
 function addNomination(movieId){
     //cant double nominate
     //only add if nomination is new
-    if(searchArray(movieId, 'imdbID', currentNominations) || currentNominations.length === 5){
+    if(searchArray(movieId, 'imdbID', currentNominations)){
+        return ;
+    }
+    if(currentNominations.length === 5){
+        alert("You have five nominations in your list already!");
         return ;
     }
     currentNominations.push(searchArray(movieId, 'imdbID', currentSearch));
+    createNominatedListItem(movieId);
+    //disable button in search list
     disableButton(movieId);
 }
 
-function createListItems(data){
+function createListItems(){
     //make sure nominated buttons show up greyed and unclickable
     //use disabled: true to grey button
+    $('#errorMessage').empty();
     $.each(currentSearch, function(i, movie) {
         let btnIsDisabled = searchArray(movie.imdbID, 'imdbID', currentNominations) === false ? false : true;
         let nominateButton = $('<button>').attr({ type: 'button', name:`btn${i}`, value:`${movie.imdbID}`, disabled:btnIsDisabled}).append('Nominate');
-        
+        let poster = $('<img>')
+                    .attr('src', movie.Poster)
+                    .height('90px')
+                    .width('60px');
+                    
+
         nominateButton.click(function(){
             let movieId = $(this).val();
             addNomination(movieId);
         });
 
-        $('<li>').append(movie.Title)
+        $('<li>').append(poster)
+        .append(movie.Title)
+        .append(`, ${movie.Year}`)
         .append(nominateButton)
         .appendTo('#searchList');
     });
+    //check if search is empty
+    if(currentSearch.length === 0){
+        $('#errorMessage').append('No results found');
+    }
 }
 
 function clearSearchResults(){
@@ -59,8 +117,8 @@ function getSearchResults(query){
     let sourceURL = `http://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURI(query)}`;
     $.getJSON(sourceURL)
     .done(function(data){
-        currentSearch = data.Search;
-        createListItems(data);
+        currentSearch = data.Search? data.Search: [];
+        createListItems();
     });
 }
 
