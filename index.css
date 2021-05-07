@@ -12,3 +12,6 @@
     display: table;
     clear: both;
   }
+th{
+    text-align: left;
+}

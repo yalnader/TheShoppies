@@ -32,17 +32,31 @@
 
     <div class="row">
         <div class="column" id="searchResults"> 
-            <span id="errorMessage"></span>
+            <span id="message"></span>
             <ul id="searchList">
                 
             </ul>
+            <table id="searchTable">
+                <th colspan="2">Movie</th><th>Release Date</th><th>Nominate</th>
+                <tbody id='tableBody'>
+
+                </tbody>
+            </table>
         </div>
     
         <div class="column" id="nominations"> 
         <!-- cap at 5 and notify client when they have reached their limit on noimtations -->
-            <ul id="noimtationsList">
+            <span id="nominationMessage"> Nominations: </span>
+            <ul id="nominationsList">
                     
             </ul>
+
+            <table id="nominationTable">
+                <th colspan="2">Movie</th><th>Release Date</th><th>Nominate</th>
+                <tbody id="tableBodyNomination">
+
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
