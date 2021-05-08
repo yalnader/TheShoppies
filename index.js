@@ -26,6 +26,32 @@ function disableButton(movieId){
     $(`#tableBody button[value=${movieId}]`).attr({disabled: true});
 }
 
+function createLimitBanner(){
+    let div = $('<div>');
+    div.attr({class:'banner'});
+
+    div.append($('<div>')
+    .attr({class:'bannerHeader'})
+    .append('Notice')
+    
+    );
+
+    div.append($('<span>')
+    .attr({class:'closeBtn'})
+    .click(function(){
+        $('#bannerDivId').empty();
+    })
+    .append('&times;')
+    );
+
+    div.append($('<div>')
+    .attr({class:'bannerBody'})
+    .append('Hey! You have made five nominations.')
+    );
+
+    div.appendTo('#bannerDivId');
+}
+
 function removeNomination(movieId){
     currentNominations = removeItemFromArray(movieId, 'imdbID', currentNominations);
     console.log(currentNominations);
@@ -39,6 +65,7 @@ function removeNomination(movieId){
     });
     //enable button in Search List
     $(`#tableBody button[value=${movieId}]`).attr({disabled: false});
+    $('#bannerDivId').empty();
 }
 
 function createNominatedListItem(movieId){
@@ -57,7 +84,7 @@ function createNominatedListItem(movieId){
     tr.append(img);
     tr.append($('<td>').append(movie.Title));
     tr.append($('<td>').append(movie.Year));
-    tr.append($('<td>').append(removeButton));
+    tr.append($('<td>').attr({class:'clickMe'}).append(removeButton));
     tr.appendTo('#tableBodyNomination');
 
 
@@ -75,11 +102,16 @@ function addNomination(movieId){
     currentNominations.push(searchArray(movieId, 'imdbID', currentSearch));
     createNominatedListItem(movieId);
     disableButton(movieId);
+
+    if(currentNominations.length === 5){
+        //create callout box here
+        createLimitBanner();
+    }
 }
 
 function createListItems(){
     
-    $('#message').empty();
+    $('#messageError').empty();
 
     $.each(currentSearch, function(i, movie) {
         let btnIsDisabled = searchArray(movie.imdbID, 'imdbID', currentNominations) === false ? false : true;
@@ -95,16 +127,14 @@ function createListItems(){
         tr.append(img);
         tr.append($('<td>').append(movie.Title));
         tr.append($('<td>').append(movie.Year));
-        tr.append($('<td>').append(nominateButton));
+        tr.append($('<td>').attr({class:'clickMe'}).append(nominateButton));
         tr.appendTo('#tableBody');
         
     });
 
     //check if search is empty
     if(currentSearch.length === 0){
-        $('#message').append('No results found');
-    } else{
-        $('#message').append('Search Results: ')
+        $('#messageError').append('No results found');
     }
 }
 

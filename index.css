@@ -1,17 +1,144 @@
 /* serach bar css code taken from: https://www.w3schools.com/howto/howto_css_search_button.asp */
+/* css buttons and input taken from : https://medium.com/@racullum/how-to-create-a-modern-html-form-with-css-1dd0f3d49712 */
+@-webkit-keyframes AnimationName {
+    0%{background-position:0% 57%, center}
+    50%{background-position:100% 44%, center}
+    100%{background-position:0% 57%, center}
+  }
+  @keyframes AnimationName {
+    0%{background-position:0% 57%, center}
+    50%{background-position:100% 44%, center}
+    100%{background-position:0% 57%, center}
+  }
+
 * {
     box-sizing: border-box;
   }
+
+html {
+    background-color: #fff;
+    color: white;
+    font-family: "Rubik", Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+ 
+    height: auto;
+
+    min-height: 20vh;
+    background: linear-gradient(120deg, #f6a192, 	#f5a481, 	#f1b375  ) no-repeat 0%;
+    background-size: 1000% auto;
+    -webkit-animation: AnimationName 15s ease infinite;
+    animation: AnimationName 15s ease infinite;
+    
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+input {
+  margin-bottom: 5vh;
+  border-right: none;
+  border-top: none;
+  border-left: none;
+  background-color:transparent;
+  outline: none;
+  color: white;
+  width: 100%;
+  caret-color: white;
+}
+
+input[type=text]::placeholder {
+  text-align: center;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+button[type=submit]{
+  background: rgba(255,255,255,.2);
+  width: 100%;
+  padding: 1.4vh;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px 4px;
+}
+
+button[type=button]{
+  background: rgba(255,255,255,.2);
+  width: 50%;
+  padding: 2vh;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px 4px;
+}
+
+body{
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
 .column{
     float: left;
     width: 50%;
     padding: 10px;
 }
+.row{
+  padding-top: 10vh;
+}
 .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
+  content: "";
+  display: table;
+  clear: both;
+}
 th{
-    text-align: left;
+    text-align: center;
+}
+td{
+  text-align: center;
+}
+
+.clickMe{
+  text-align: left;
+}
+
+
+
+/* banner css */
+
+.banner {
+  position: fixed;
+  bottom: 35px;
+  right: 20px;
+  margin-left: 0px;
+  max-width: 300px;
+  border-radius: 15px;
+  background:rgb(144, 174, 110);
+  border: 1px solid rgb(144, 174, 110);
+}
+
+.bannerHeader {
+  padding: 10px 45px 10px 15px;
+  font-size: 20px;
+  color: white;
+}
+
+.bannerBody {
+  padding: 15px;
+  color: white
+}
+
+.closeBtn {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  color: rgb(192, 88, 88);
 }
