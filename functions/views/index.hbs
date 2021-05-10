@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/index.css">
+    <script 
+    src="https://code.jquery.com/jquery-3.6.0.min.js" 
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous">
+    </script>
+    <title>Nominations</title>
+</head>
+<body>
+
+    <div class="container" id="searchContainer">
+        <h1>The Shoppies</h1>
+
+        <h2>Nominations List:  {{obj.name}}</h2>
+        <!-- code inspired by: https://www.w3schools.com/howto/howto_css_search_button.asp-->
+        <table id="nominationTable">
+            <th colspan="2" width="25%">Movie</th><th width="10%">Release Date</th>
+            <tbody id="tableBodyNomination">
+                {{#each obj.nominations}}
+               
+                
+                    <tr>
+                        <td><img src= {{this.Poster}} height ="90px" width = "60px" /></td>
+                        <td>{{this.Title}}</td>
+                        <td>{{this.Year}}</td>
+                    </tr>
+                
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>

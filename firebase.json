@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "public": "functions/public",
+    "rewrites": [{
+      "source": "/nominations/**",
+      "function": "app",
+      "dynamicLinks": true
+    }],
+    "redirects" : [
+      {
+        "source" : "/nominations",
+        "destination": "/",
+        "type": 301
+      }
+    ],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

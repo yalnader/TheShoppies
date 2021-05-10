@@ -2,11 +2,10 @@
 //emaple for single serach reults: http://www.omdbapi.com/?apikey=a0ddb910&t=Star+Wars
 //emaple for multi  serach reults: http://www.omdbapi.com/?apikey=a0ddb910&s=Star+Wars
 
-//stuff about api doesnt seem to take special characters
-
 var API_KEY = 'a0ddb910'
 var currentSearch = [];
 var currentNominations = [];
+
 
 function searchArray(value, prop, searchArray){
     for(let i = 0; i < searchArray.length; i++){
@@ -66,6 +65,10 @@ function removeNomination(movieId){
     //enable button in Search List
     $(`#tableBody button[value=${movieId}]`).attr({disabled: false});
     $('#bannerDivId').empty();
+
+    if(currentNominations.length < 1){
+        $('#shareLink').css("display", "none");
+    }
 }
 
 function createNominatedListItem(movieId){
@@ -103,9 +106,15 @@ function addNomination(movieId){
     createNominatedListItem(movieId);
     disableButton(movieId);
 
+    console.log(currentSearch);
+
     if(currentNominations.length === 5){
         //create callout box here
         createLimitBanner();
+    }
+    if(currentNominations.length > 0){
+        //render share link button
+        $('#shareLink').css({"display": "block", "text-align" : "center"});
     }
 }
 
@@ -144,13 +153,16 @@ function clearResults(id){
 }
 
 function getSearchResults(query){
-    let sourceURL = `http://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURI(query)}`;
+    let sourceURL = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURI(query)}`;
     $.getJSON(sourceURL)
     .done(function(data){
         currentSearch = data.Search? data.Search: [];
         createListItems();
     });
 }
+
+
+
 
 $(document).ready(function(){
     //trigger search query
@@ -164,6 +176,45 @@ $(document).ready(function(){
         var cleanedQuery = searchQuery.trim().replace(/\s/g, '+');
 
         getSearchResults(cleanedQuery);
+    });
+
+    $('#shareLinkBtn').click(function(e){
+        // e.preventDefault();
+        //ask user to enter a name for the nomination list
+        $('#shareLinkForm').css({"display": "inline-block"});
+        //save results to DB
+        $('#shareLinkForm').submit(function(e){
+            e.preventDefault();
+
+            let listName = $('#noimtationListName').val();
+            console.log(listName);
+
+            let data  = {
+                name: listName,
+                nominations: currentNominations
+            }
+
+            let ref = db.ref('nominationTree');
+
+            let dbRef = ref.push(data);
+
+            //refernce key for object
+            let refKey = dbRef.getKey();
+
+            console.log(refKey);
+
+            $('#shareableLink').val(`https://theshoppies-e7cd3.web.app/nominations/${encodeURI(refKey)}`);
+
+            $('#shareableLinkDiv').css({"display": "inline-block"});
+
+        });
+        //generate link using the id genterated by the backend
+
+        //structure of data
+        // theShoppies
+        //          ->id1
+        //              ->Name: "Yassers Nomination List"
+        //              ->Movies: [{title, year, poster, imdbId}]
     });
 });
 
