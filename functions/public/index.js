@@ -53,7 +53,7 @@ function createLimitBanner(){
 
 function removeNomination(movieId){
     currentNominations = removeItemFromArray(movieId, 'imdbID', currentNominations);
-    console.log(currentNominations);
+ 
 
     //update UI
 
@@ -106,7 +106,6 @@ function addNomination(movieId){
     createNominatedListItem(movieId);
     disableButton(movieId);
 
-    console.log(currentSearch);
 
     if(currentNominations.length === 5){
         //create callout box here
@@ -179,7 +178,7 @@ $(document).ready(function(){
     });
 
     $('#shareLinkBtn').click(function(e){
-        // e.preventDefault();
+
         //ask user to enter a name for the nomination list
         $('#shareLinkForm').css({"display": "inline-block"});
         //save results to DB
@@ -187,7 +186,6 @@ $(document).ready(function(){
             e.preventDefault();
 
             let listName = $('#noimtationListName').val();
-            console.log(listName);
 
             let data  = {
                 name: listName,
@@ -201,20 +199,12 @@ $(document).ready(function(){
             //refernce key for object
             let refKey = dbRef.getKey();
 
-            console.log(refKey);
 
             $('#shareableLink').val(`https://theshoppies-e7cd3.web.app/nominations/${encodeURI(refKey)}`);
 
             $('#shareableLinkDiv').css({"display": "inline-block"});
 
         });
-        //generate link using the id genterated by the backend
-
-        //structure of data
-        // theShoppies
-        //          ->id1
-        //              ->Name: "Yassers Nomination List"
-        //              ->Movies: [{title, year, poster, imdbId}]
     });
 });
 
