@@ -68,6 +68,8 @@ function removeNomination(movieId){
 
     if(currentNominations.length < 1){
         $('#shareLink').css("display", "none");
+        $('#noimtationListName').val('');
+        $('#shareableLink').val('');
     }
 }
 
@@ -186,6 +188,8 @@ $(document).ready(function(){
             e.preventDefault();
 
             let listName = $('#noimtationListName').val();
+
+            console.log(listName);
 
             let data  = {
                 name: listName,
